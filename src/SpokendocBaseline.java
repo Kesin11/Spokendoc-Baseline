@@ -9,6 +9,7 @@ import org.apache.lucene.document.*;
 import org.apache.lucene.index.*;
 import org.apache.lucene.search.*;
 import org.apache.lucene.search.similarities.BM25Similarity;
+import org.apache.lucene.search.similarities.LMDirichletSimilarity;
 import org.apache.lucene.store.*;
 import org.apache.lucene.util.Version;
 
@@ -29,7 +30,9 @@ public class SpokendocBaseline {
 		//Directory directory = new RAMDirectory();
 		//MMapDirectory: 読み込みはメモリ、書き出しはファイルシステムらしい
 		Directory directory = MMapDirectory.open(new File("index"));
-		BM25Similarity similarity = new BM25Similarity(); 
+		// デフォルトの類似度は改良TFIDF.他にBM25, LanguageModelなどがある
+		//BM25Similarity similarity = new BM25Similarity(); 
+		LMDirichletSimilarity similarity = new LMDirichletSimilarity();
 
 		IndexWriterConfig config = new IndexWriterConfig(Version.LUCENE_46, analyzer);
 		// Index側でも類似度を変更することに注意
