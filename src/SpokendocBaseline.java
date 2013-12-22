@@ -13,9 +13,10 @@ import org.apache.lucene.store.*;
 import org.apache.lucene.util.Version;
 
 public class SpokendocBaseline {
-	private static void addDoc(IndexWriter writer, String text) throws IOException{
+	private static void addDoc(IndexWriter writer, String id, String content) throws IOException{
 		Document doc = new Document();
-        doc.add(new Field("content", text, TextField.TYPE_STORED));
+        doc.add(new Field("id", id, TextField.TYPE_STORED));
+        doc.add(new Field("content", content, TextField.TYPE_STORED));
         writer.addDocument(doc);
 	}
 	
@@ -28,23 +29,23 @@ public class SpokendocBaseline {
 		//Directory directory = new RAMDirectory();
 		//MMapDirectory: 読み込みはメモリ、書き出しはファイルシステムらしい
 		Directory directory = MMapDirectory.open(new File("index"));
-		BM25Similarity bm25similarity = new BM25Similarity(); 
+		BM25Similarity similarity = new BM25Similarity(); 
 
 		IndexWriterConfig config = new IndexWriterConfig(Version.LUCENE_46, analyzer);
 		// Index側でも類似度を変更することに注意
-		config.setSimilarity(bm25similarity);
+		config.setSimilarity(similarity);
         IndexWriter writer = new IndexWriter(directory, config);
-        addDoc(writer, "This is the text to be indexed");
-        addDoc(writer, "High score text text");
-        addDoc(writer, "Lower score. Score is maybe normalized using text length");
-        addDoc(writer, "text");
+        addDoc(writer, "doc1", "This is the text to be indexed");
+        addDoc(writer, "doc2", "High score text text");
+        addDoc(writer, "doc3", "Lower score. Score is maybe normalized using text length");
+        addDoc(writer, "doc4", "text");
 	    writer.close();
 	    
 	    // Search
 	    DirectoryReader reader = DirectoryReader.open(directory);
 	    IndexSearcher searcher = new IndexSearcher(reader);
 	    // 類似度を変更
-	    searcher.setSimilarity(bm25similarity);
+	    searcher.setSimilarity(similarity);
 	    QueryParser parser = new QueryParser(Version.LUCENE_46,"content", analyzer);
 	    Query query = parser.parse("text");
 	    TopDocs results = searcher.search(query, null, 1000);
@@ -55,7 +56,7 @@ public class SpokendocBaseline {
 	    	int docID = sd.doc;
 	    	float score = sd.score;
 	    	Document doc = searcher.doc(docID);
-	    	System.out.println(doc.get("content") + ", score:" + Float.toString(score));
+	    	System.out.println(doc.get("id") + ", " + doc.get("content") + ", score:" + Float.toString(score));
 	    }
 	    reader.close();
 	    directory.close();
