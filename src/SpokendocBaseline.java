@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import org.apache.lucene.analysis.*;
 import org.apache.lucene.analysis.core.WhitespaceAnalyzer;
@@ -21,9 +22,7 @@ public class SpokendocBaseline {
 	public Analyzer analyzer;
 	// directoryのclose()は呼び出さなくても大丈夫なのか？
 	public Directory directory;
-	// デフォルトの類似度は改良TFIDF.他にBM25, LanguageModelなどがある
-	// public BM25Similarity similarity
-	public LMDirichletSimilarity similarity;
+	public Similarity similarity;
 	
 	public SpokendocBaseline(String path) throws IOException {
 		this.analyzer = new WhitespaceAnalyzer(Version.LUCENE_46);
@@ -31,13 +30,16 @@ public class SpokendocBaseline {
 		//this.directory = new RAMDirectory();
 		//MMapDirectory: 読み込みはメモリ、書き出しはファイルシステムらしい
 		this.directory = MMapDirectory.open(new File(path));
+        // デフォルトの類似度は改良TFIDF.他にBM25, LanguageModelなどがある
+//		this.similarity = new DefaultSimilarity();
+//		this.similarity = new BM25Similarity();
 		this.similarity = new LMDirichletSimilarity();
 	}
 	public IndexWriter getIndexWriter() throws IOException{
 		IndexWriterConfig config = new IndexWriterConfig(Version.LUCENE_46, analyzer);
 		// Index側でも類似度を変更することに注意
-		config.setSimilarity(similarity);
-        IndexWriter writer = new IndexWriter(directory, config);
+		config.setSimilarity(this.similarity);
+        IndexWriter writer = new IndexWriter(this.directory, config);
 
 		return writer;
 	}
@@ -46,7 +48,7 @@ public class SpokendocBaseline {
 	    DirectoryReader reader = DirectoryReader.open(this.directory);
 	    IndexSearcher searcher = new IndexSearcher(reader);
 	    // 類似度を変更
-	    searcher.setSimilarity(similarity);
+	    searcher.setSimilarity(this.similarity);
 
 		return searcher;
 	}
@@ -54,4 +56,26 @@ public class SpokendocBaseline {
 	    QueryParser parser = new QueryParser(Version.LUCENE_46,field, this.analyzer);
 		return parser;
 	}
+
+	//repeatNumの数だけwordが入っている配列を作成する
+	public static String[] repatStringWithNumber(String word, Integer repeatNum) {
+		ArrayList<String> strings = new ArrayList<String>();
+		for (int i=0; i<repeatNum; i++){
+			strings.add(word);
+		}
+		return strings.toArray(new String[0]);
+	}
+
+	//splitter区切りでwordsを連結する。perlやpythonのjoinと同じ
+	public static String joinWithSplitter(String[] words, String splitter){
+		String string = "";
+		for (String word: words){
+			if (!string.isEmpty()){
+				string += splitter;
+			}
+			string += word;
+		}
+		return string;
+	}
+
 }

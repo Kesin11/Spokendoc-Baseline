@@ -9,12 +9,15 @@ import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 
 public class search {
-	public static void main(String[] args) throws IOException, ParseException {
+	public static void main(String[] args) throws IOException, ParseException, InterruptedException {
 		SpokendocBaseline spokendoc = new SpokendocBaseline("index");
 	    // Search
-		IndexSearcher searcher = spokendoc.getIndexSearcher();
+		String q = "音声ドキュメント処理のパッセージ検索はこれから利便性の高い検索手法になる";
+        String tokenizedString = SpokendocBaseline.joinWithSplitter(Tokenizer.tokenize(q), " ");
+        System.out.println(tokenizedString);
 		QueryParser parser = spokendoc.getQueryParser("content");
-	    Query query = parser.parse("text");
+	    Query query = parser.parse(tokenizedString);
+		IndexSearcher searcher = spokendoc.getIndexSearcher();
 	    TopDocs results = searcher.search(query, null, 1000);
 	    
 	    // Show results
@@ -23,8 +26,10 @@ public class search {
 	    	int docID = sd.doc;
 	    	float score = sd.score;
 	    	Document doc = searcher.doc(docID);
-	    	System.out.println(doc.get("id") + ", " + doc.get("content") + ", score:" + Float.toString(score));
+//	    	System.out.println(doc.get("id") + ", " + doc.get("content") + ", score:" + Float.toString(score));
+	    	System.out.println(doc.get("id") + ", score:" + Float.toString(score));
 	    }
+	    System.out.println("Done searching!");
 	}
 
 }

@@ -1,7 +1,6 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,27 +47,6 @@ public class indexing {
 		return idWordTfHash;
 	}
 
-	//repeatNumの数だけwordが入っている配列を作成する
-	public static String[] repatStringWithNumber(String word, Integer repeatNum) {
-		ArrayList<String> strings = new ArrayList<String>();
-		for (int i=0; i<repeatNum; i++){
-			strings.add(word);
-		}
-		return strings.toArray(new String[0]);
-	}
-
-	//splitter区切りでwordsを連結する。perlやpythonのjoinと同じ
-	public static String joinWithSplitter(String[] words, String splitter){
-		String string = "";
-		for (String word: words){
-			if (!string.isEmpty()){
-				string += splitter;
-			}
-			string += word;
-		}
-		return string;
-	}
-
 	public static void main(String[] args) throws IOException {
 		SpokendocBaseline spokendoc = new SpokendocBaseline("index");
 
@@ -84,8 +62,8 @@ public class indexing {
 				Integer num = wordTf.getValue();
 				//numの回数だけwordを繰り返す
 				//例: "word word word"
-				String[] repeatStrings = repatStringWithNumber(word, num);
-				String repeatString = joinWithSplitter(repeatStrings, " ");
+				String[] repeatStrings = SpokendocBaseline.repatStringWithNumber(word, num);
+				String repeatString = SpokendocBaseline.joinWithSplitter(repeatStrings, " ");
 				//docIdに含まれていた単語をスペース区切りで1つの文字列にする
 				//例: "word1 word1 word2 word3"
 				if (!indexString.isEmpty()){
