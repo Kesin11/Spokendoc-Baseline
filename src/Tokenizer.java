@@ -12,7 +12,7 @@ public class Tokenizer {
 	String tokenizerPath = "tokenizer.sh";
 	public static String[] tokenize(String rowString) throws IOException, InterruptedException{
 		// サブコマンド実行
-		String command = "echo " + rowString +  " | sh src/tokenizer.sh";
+		String command = "echo " + '"' + rowString + '"' + " | sh src/tokenizer.sh";
 		Process process = new ProcessBuilder("sh", "-c", command).start();
 		// デバッグ用。シェルのエラーコード
 //		int ret = process.waitFor();
