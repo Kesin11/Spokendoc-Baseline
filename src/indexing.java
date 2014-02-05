@@ -64,8 +64,8 @@ public class indexing {
 				Integer num = wordTf.getValue();
 				//numの回数だけwordを繰り返す
 				//例: "word word word"
-				String[] repeatStrings = SpokendocBaseline.repatStringWithNumber(word, num);
-				String repeatString = SpokendocBaseline.joinWithSplitter(repeatStrings, " ");
+				String[] repeatStrings = Util.repatStringWithNumber(word, num);
+				String repeatString = Util.joinWithSplitter(repeatStrings, " ");
 				//docIdに含まれていた単語をスペース区切りで1つの文字列にする
 				//例: "word1 word1 word2 word3"
 				if (!indexString.isEmpty()){

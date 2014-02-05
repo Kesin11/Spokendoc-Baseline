@@ -32,7 +32,7 @@ public class search {
 	// クエリの文字列から検索
 	private static TopDocs searchFromString(SpokendocBaseline spokendoc, String q)
 			throws IOException, InterruptedException, ParseException {
-		String tokenizedString = SpokendocBaseline.joinWithSplitter(Tokenizer.tokenize(q, spokendoc.tokenizerPath), " ");
+		String tokenizedString = Util.joinWithSplitter(Tokenizer.tokenize(q, spokendoc.tokenizerPath), " ");
 		QueryParser parser = spokendoc.getQueryParser("content");
 	    Query query = parser.parse(tokenizedString);
 		IndexSearcher searcher = spokendoc.getIndexSearcher();
