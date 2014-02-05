@@ -1,18 +1,21 @@
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Properties;
 
-import org.apache.lucene.analysis.*;
+import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.core.WhitespaceAnalyzer;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.similarities.*;
-import org.apache.lucene.store.*;
+import org.apache.lucene.search.similarities.BM25Similarity;
+import org.apache.lucene.search.similarities.DefaultSimilarity;
+import org.apache.lucene.search.similarities.LMDirichletSimilarity;
+import org.apache.lucene.search.similarities.Similarity;
+import org.apache.lucene.store.Directory;
+import org.apache.lucene.store.MMapDirectory;
 import org.apache.lucene.util.Version;
 
 /** 
@@ -58,6 +61,7 @@ public class SpokendocBaseline {
 		}
 		fis.close();
 	}
+
 	public IndexWriter getIndexWriter() throws IOException{
 		IndexWriterConfig config = new IndexWriterConfig(Version.LUCENE_46, analyzer);
 		// Index側でも類似度を変更することに注意
