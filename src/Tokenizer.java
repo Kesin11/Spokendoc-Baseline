@@ -9,10 +9,9 @@ import java.util.ArrayList;
  * http://www.ne.jp/asahi/hishidama/home/tech/java/process.html
  */
 public class Tokenizer {
-	String tokenizerPath = "tokenizer.sh";
-	public static String[] tokenize(String rowString) throws IOException, InterruptedException{
+	public static String[] tokenize(String rowString, String tokenizerPath) throws IOException, InterruptedException{
 		// サブコマンド実行
-		String command = "echo " + '"' + rowString + '"' + " | sh src/tokenizer.sh";
+		String command = "echo " + '"' + rowString + '"' + " | sh " + tokenizerPath;
 		Process process = new ProcessBuilder("sh", "-c", command).start();
 		// デバッグ用。シェルのエラーコード
 //		int ret = process.waitFor();
@@ -28,13 +27,4 @@ public class Tokenizer {
 		}
 		return tokens.toArray(new String[0]);
 	}
-	
-	public static void main(String[] args) throws IOException, InterruptedException {
-		String rawString = args[0];
-		String[] tokens = tokenize(rawString);
-		for (String token: tokens){
-            System.out.println(token);
-		}
-	}
-
 }

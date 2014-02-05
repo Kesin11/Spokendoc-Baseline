@@ -48,11 +48,11 @@ public class indexing {
 	}
 
 	public static void main(String[] args) throws IOException {
-		SpokendocBaseline spokendoc = new SpokendocBaseline("index");
+		SpokendocBaseline spokendoc = new SpokendocBaseline("lm.properties");
 
 		// Indexing
 		IndexWriter writer = spokendoc.getIndexWriter();
-		HashMap<String, HashMap<String, Integer>> idWordTfHash = parseFreqfile("freqfile");
+		HashMap<String, HashMap<String, Integer>> idWordTfHash = parseFreqfile(spokendoc.freqfilePath);
 		for (Map.Entry<String, HashMap<String, Integer>> idWordTf : idWordTfHash.entrySet()){
 			String docId = idWordTf.getKey();
 			String indexString = "";

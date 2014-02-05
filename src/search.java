@@ -17,21 +17,22 @@ import org.apache.lucene.search.TopDocs;
 
 public class search {
 	public static void main(String[] args) throws IOException, ParseException, InterruptedException, ParserConfigurationException, TransformerException {
-		SpokendocBaseline spokendoc = new SpokendocBaseline("index");
+		SpokendocBaseline spokendoc = new SpokendocBaseline("lm.properties");
+
 	    // Search
 		String q = "音声ドキュメント処理のパッセージ検索はこれから利便性の高い検索手法になる";
 //        TopDocs results = searchFromString(spokendoc, q);
 //	    System.out.println("Query: " + q);
 //	    printResult(spokendoc, results);
 
-		searchFromFile(spokendoc, "queries.txt", "result.xml");
+		searchFromFile(spokendoc, "queries.txt");
 	    System.out.println("Done searching!");
 	}
 
 	// クエリの文字列から検索
 	private static TopDocs searchFromString(SpokendocBaseline spokendoc, String q)
 			throws IOException, InterruptedException, ParseException {
-		String tokenizedString = SpokendocBaseline.joinWithSplitter(Tokenizer.tokenize(q), " ");
+		String tokenizedString = SpokendocBaseline.joinWithSplitter(Tokenizer.tokenize(q, spokendoc.tokenizerPath), " ");
 		QueryParser parser = spokendoc.getQueryParser("content");
 	    Query query = parser.parse(tokenizedString);
 		IndexSearcher searcher = spokendoc.getIndexSearcher();
@@ -49,7 +50,7 @@ public class search {
 	    	System.out.println(doc.get("id") + ", score:" + Float.toString(score));
 	    }
 	}
-	private static void searchFromFile(SpokendocBaseline spokendoc, String queryFile, String outXml) throws IOException, InterruptedException, ParseException, ParserConfigurationException, TransformerException{
+	private static void searchFromFile(SpokendocBaseline spokendoc, String queryFile) throws IOException, InterruptedException, ParseException, ParserConfigurationException, TransformerException{
 		SpokenDocXML spokenDocXML = new SpokenDocXML(spokendoc.getIndexSearcher());
 		BufferedReader br = new BufferedReader(new FileReader(queryFile));
 		String line;
@@ -69,6 +70,6 @@ public class search {
 			spokenDocXML.topDocArrayList.add(results);
 		}
 		// XML出力
-		spokenDocXML.createXml(outXml);
+		spokenDocXML.createXml(spokendoc.resultPath);
 	}
 }
