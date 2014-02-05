@@ -52,6 +52,8 @@ public class indexing {
 
 		// Indexing
 		IndexWriter writer = spokendoc.getIndexWriter();
+		// 同名の索引が存在するときは全消去して作り直し
+		writer.deleteAll();
 		HashMap<String, HashMap<String, Integer>> idWordTfHash = parseFreqfile(spokendoc.freqfilePath);
 		for (Map.Entry<String, HashMap<String, Integer>> idWordTf : idWordTfHash.entrySet()){
 			String docId = idWordTf.getKey();
