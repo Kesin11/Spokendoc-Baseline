@@ -24,7 +24,7 @@ public class Main {
 		Subparser indexSubparser = subparsers.addParser("index")
 			.setDefault("subcommand", "index")
 		    .help("Make index");
-		indexSubparser.addArgument("-p", "--properties")
+		indexSubparser.addArgument("properties")
 		    .required(true)
 		    .help("Properties file path");
 
@@ -32,15 +32,16 @@ public class Main {
 		Subparser searchSubparser = subparsers.addParser("search")
 			.setDefault("subcommand", "search")
 		    .help("Search related document with query");
-		searchSubparser.addArgument("-p", "--properties")
+		searchSubparser.addArgument("properties")
 		    .required(true)
 		    .help("Properties file path");
-		searchSubparser.addArgument("-q", "--query")
+		searchSubparser.addArgument("query")
 		    .required(true)
 		    .help("Input query sentence OR queries file path");
 		try {
 			Namespace ns = parser.parseArgs(args);
-//			Namespace ns = parser.parseArgs(new String[]{"search", "-p","lm.properties", "-q", "queries.txt"});
+//			Namespace ns = parser.parseArgs(new String[]{"search", "lm.properties", "queries.txt"});
+//			Namespace ns = parser.parseArgs(new String[]{"index", "lm.properties"});
 			// サブコマンド分岐
 		    if (ns.getString("subcommand").equals("index")) {
 		    	Index.indexing(ns.getString("properties"));
