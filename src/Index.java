@@ -9,7 +9,7 @@ import org.apache.lucene.document.Field;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.IndexWriter;
 
-public class indexing {
+public class Index {
 	private static void addDoc(IndexWriter writer, String id, String content) throws IOException{
 		Document doc = new Document();
         doc.add(new Field("id", id, TextField.TYPE_STORED));
@@ -47,8 +47,8 @@ public class indexing {
 		return idWordTfHash;
 	}
 
-	public static void main(String[] args) throws IOException {
-		SpokendocBaseline spokendoc = new SpokendocBaseline("lm.properties");
+	public static void indexing(String propertiesPath) throws IOException {
+		SpokendocBaseline spokendoc = new SpokendocBaseline(propertiesPath);
 
 		// Indexing
 		IndexWriter writer = spokendoc.getIndexWriter();

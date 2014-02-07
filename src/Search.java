@@ -1,4 +1,5 @@
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -15,18 +16,24 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 
-public class search {
-	public static void main(String[] args) throws IOException, ParseException, InterruptedException, ParserConfigurationException, TransformerException {
-		SpokendocBaseline spokendoc = new SpokendocBaseline("lm.properties");
+public class Search {
+	public static void searching(String propertiesPath, String query) throws IOException, ParseException, InterruptedException, ParserConfigurationException, TransformerException {
+		SpokendocBaseline spokendoc = new SpokendocBaseline(propertiesPath);
 
-	    // Search
-		String q = "音声ドキュメント処理のパッセージ検索はこれから利便性の高い検索手法になる";
-//        TopDocs results = searchFromString(spokendoc, q);
-//	    System.out.println("Query: " + q);
-//	    printResult(spokendoc, results);
-
-		searchFromFile(spokendoc, "queries.txt");
-	    System.out.println("Done searching!");
+		// クエリファイルから検索、XMLに出力
+		if (new File(query).exists()){
+    		System.out.println("Search from queries file...");
+		    searchFromFile(spokendoc, "queries.txt");
+		}
+		// 1行のクエリから検索、標準出力
+		else{
+    		System.out.println("Search from query string");
+	        System.out.println("Query: " + query);
+    		String tokenizedString = Util.joinWithSplitter(Tokenizer.tokenize(query, spokendoc.tokenizerPath), " ");
+    		System.out.println(tokenizedString);
+            TopDocs results = searchFromString(spokendoc, query);
+	        printResult(spokendoc, results);
+		}
 	}
 
 	// クエリの文字列から検索
