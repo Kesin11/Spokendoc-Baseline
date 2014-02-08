@@ -1,0 +1,6 @@
+文字コードの問題
+Eclipseだとデフォルトで文字コードはUTF-8なので問題ない
+コマンドラインからの実行は明示的に指定しないとまともに動作しない
+java jar -Dfile.encoding=UTF-8
+又は、.bash_profileでjavaコマンドにaliasを設定するか、JVMにデフォルトオプションを渡す設定を書くらしい
+マジか
