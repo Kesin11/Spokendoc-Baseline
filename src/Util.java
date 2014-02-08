@@ -1,3 +1,4 @@
+import java.text.Normalizer;
 import java.util.ArrayList;
 
 /*
@@ -22,5 +23,12 @@ public class Util {	//repeatNumの数だけwordが入っている配列を作成
 			string += word;
 		}
 		return string;
+	}
+	/*
+	 * 文字の正規化
+	 * 全角英数字→半角英数字、大文字→小文字、半角カナ→全角
+	 */
+	public static String normalizeString(String rawString){
+		return Normalizer.normalize(rawString, Normalizer.Form.NFKC).toLowerCase();
 	}
 }

@@ -9,9 +9,9 @@ import java.util.ArrayList;
  * http://www.ne.jp/asahi/hishidama/home/tech/java/process.html
  */
 public class Tokenizer {
-	public static String[] tokenize(String rowString, String tokenizerPath) throws IOException, InterruptedException{
+	public static String[] tokenize(String rawString, String tokenizerPath) throws IOException, InterruptedException{
 		// サブコマンド実行
-		String command = "echo " + '"' + rowString + '"' + " | sh " + tokenizerPath;
+		String command = "echo " + '"' + rawString + '"' + " | sh " + tokenizerPath;
 		Process process = new ProcessBuilder("sh", "-c", command).start();
 		// デバッグ用。シェルのエラーコード
 //		int ret = process.waitFor();

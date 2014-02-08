@@ -55,10 +55,12 @@ public class Index {
 		// 同名の索引が存在するときは全消去して作り直し
 		writer.deleteAll();
 		HashMap<String, HashMap<String, Integer>> idWordTfHash = parseFreqfile(spokendoc.freqfilePath);
+		// ドキュメントIDループ
 		for (Map.Entry<String, HashMap<String, Integer>> idWordTf : idWordTfHash.entrySet()){
 			String docId = idWordTf.getKey();
 			String indexString = "";
 			HashMap<String, Integer> wordTfHash = idWordTf.getValue();
+			// 単語頻度ループ
 			for (Map.Entry<String, Integer> wordTf : wordTfHash.entrySet()){
 				String word = wordTf.getKey();
 				Integer num = wordTf.getValue();
@@ -72,6 +74,10 @@ public class Index {
 					indexString += " ";
 				}
 				indexString += repeatString;
+			}
+			// 文字列正規化
+			if (spokendoc.normalization) {
+				indexString = Util.normalizeString(indexString);
 			}
 			addDoc(writer, docId, indexString);
 		}

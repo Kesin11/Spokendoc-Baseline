@@ -31,6 +31,7 @@ public class SpokendocBaseline {
 	public String tokenizerPath;
 	public String resultPath;
 	public Similarity similarity;
+	public Boolean normalization;
 	
 	public SpokendocBaseline(String propatiesPath) throws IOException {
 		Properties conf = new Properties();
@@ -40,6 +41,7 @@ public class SpokendocBaseline {
 		this.freqfilePath = conf.getProperty("freqfile");
 		this.tokenizerPath = conf.getProperty("tokenizer");
 		this.resultPath = conf.getProperty("result");
+		this.normalization = new Boolean(conf.getProperty("normalization"));
 		//メモリにインデックス保存する。テスト用
 		//this.directory = new RAMDirectory();
 		//MMapDirectory: 読み込みはメモリ、書き出しはファイルシステムらしい
