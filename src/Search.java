@@ -47,6 +47,7 @@ public class Search {
 			queryString = Util.normalizeString(queryString);
 		}
 		String tokenizedString = Util.joinWithSplitter(Tokenizer.tokenize(queryString, spokendoc.tokenizerPath), " ");
+		tokenizedString = tokenizedString.replaceAll("([¥+¥-¥&¥|¥!¥(¥)¥{¥}¥[¥]¥^¥~¥*¥?¥:¥¥])", "¥"+"$1");
 
 		QueryParser parser = spokendoc.getQueryParser("content");
 	    Query query = parser.parse(tokenizedString);
