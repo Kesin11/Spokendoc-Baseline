@@ -23,7 +23,7 @@ public class Search {
 		// クエリファイルから検索、XMLに出力
 		if (new File(query).exists()){
     		System.out.println("Search from queries file...");
-		    searchFromFile(spokendoc, "queries.txt");
+		    searchFromFile(spokendoc, query);
 		}
 		// 1行のクエリから検索、標準出力
 		else{

@@ -61,7 +61,7 @@ public class SpokenDocXML {
 		    resultElement.appendChild(queryElement);
 
 			TopDocs topDocs = topDocArrayList.get(i);
-		    for (int j = 0; j < topDocs.totalHits; j++) {
+		    for (int j = 0; j < topDocs.scoreDocs.length; j++) {
 		    	ScoreDoc sd = topDocs.scoreDocs[j];
 		    	int docId = sd.doc;
 //		    	float score = sd.score;
