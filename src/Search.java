@@ -73,6 +73,10 @@ public class Search {
 		ArrayList<HashMap<String, String>> queries = new ArrayList<HashMap<String,String>>();
 		// クエリファイルからid, クエリ文字列読み取り
 		while((line = br.readLine()) != null){
+			// #から開始する行はコメントとして処理しない
+			if (line.startsWith("#")){
+				continue;
+			}
 			HashMap<String, String> idQuery = new HashMap<String, String>();
 			idQuery.put("id", line.split(" ")[0]);
 			idQuery.put("query", line.split(" ")[1]);
