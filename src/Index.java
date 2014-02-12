@@ -1,8 +1,6 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
@@ -17,36 +15,6 @@ public class Index {
         writer.addDocument(doc);
 	}
 
-    /**
-     *
-     * @param path freqfileのパス
-     * @return スペース区切りの単語が連続する文字列
-     * @throws IOException
-     */
-	public static HashMap<String, HashMap<String, Integer>> parseFreqfile(String path) throws IOException{
-		HashMap<String, HashMap<String, Integer>> idWordTfHash = new HashMap<String, HashMap<String, Integer>>();
-		BufferedReader br = new BufferedReader(new FileReader(path));
-		String line;
-		String id = "";
-		HashMap<String, Integer> wordTf = new HashMap<String, Integer>();
-		while((line = br.readLine()) != null){
-			if (line.startsWith("@")){
-				if (!id.isEmpty()){
-				    idWordTfHash.put(id, wordTf);
-				}
-
-                wordTf = new HashMap<String, Integer>();
-				id = line.substring(1);
-			}
-			else{
-				String[] tfWord = line.split(" ");
-				wordTf.put(tfWord[1], new Integer(tfWord[0]));
-			}
-		}
-		br.close();
-		return idWordTfHash;
-	}
-
 	public static void indexing(String propertiesPath) throws IOException {
 		SpokendocBaseline spokendoc = new SpokendocBaseline(propertiesPath);
 
@@ -54,33 +22,39 @@ public class Index {
 		IndexWriter writer = spokendoc.getIndexWriter();
 		// 同名の索引が存在するときは全消去して作り直し
 		writer.deleteAll();
-		HashMap<String, HashMap<String, Integer>> idWordTfHash = parseFreqfile(spokendoc.freqfilePath);
-		// ドキュメントIDループ
-		for (Map.Entry<String, HashMap<String, Integer>> idWordTf : idWordTfHash.entrySet()){
-			String docId = idWordTf.getKey();
-			String indexString = "";
-			HashMap<String, Integer> wordTfHash = idWordTf.getValue();
-			// 単語頻度ループ
-			for (Map.Entry<String, Integer> wordTf : wordTfHash.entrySet()){
-				String word = wordTf.getKey();
-				Integer num = wordTf.getValue();
-				//numの回数だけwordを繰り返す
-				//例: "word word word"
-				String[] repeatStrings = Util.repatStringWithNumber(word, num);
+		BufferedReader bReader = new BufferedReader(new FileReader(spokendoc.freqfilePath));
+		String line;
+		String docId = "";
+		String indexString = "";
+		while((line = bReader.readLine()) != null){
+			if (line.startsWith("@")) {
+				if (!docId.isEmpty()) {
+			        // 文字列正規化
+			        if (spokendoc.normalization) {
+				        indexString = Util.normalizeString(indexString);
+			        }
+				    // TF, id書き出し
+			        addDoc(writer, docId, indexString);
+				}
+				//"@"以降の文字列を取得
+				docId = line.substring(1);
+		        indexString = "";
+			}
+			else {
+				String[] tfWord = line.split(" ");
+				Integer tf = Integer.valueOf(tfWord[0]);
+				String word = tfWord[1];
+				// スペース区切りの単語の連続に加工する 
+				String[] repeatStrings = Util.repatStringWithNumber(word, tf);
 				String repeatString = Util.joinWithSplitter(repeatStrings, " ");
-				//docIdに含まれていた単語をスペース区切りで1つの文字列にする
-				//例: "word1 word1 word2 word3"
+				// 既に単語が入力されているときはスペースを追加してから加える
 				if (!indexString.isEmpty()){
 					indexString += " ";
 				}
 				indexString += repeatString;
 			}
-			// 文字列正規化
-			if (spokendoc.normalization) {
-				indexString = Util.normalizeString(indexString);
-			}
-			addDoc(writer, docId, indexString);
 		}
+		bReader.close();
 	    writer.close();
 
 	    System.out.println("Done indexing!");
