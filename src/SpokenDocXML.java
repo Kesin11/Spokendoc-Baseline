@@ -1,6 +1,10 @@
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Scanner;
+import java.util.regex.MatchResult;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -31,7 +35,7 @@ public class SpokenDocXML {
     	this.queryArrayList = new ArrayList<String>();
     }
 
-	public void createXml(String filePath) throws ParserConfigurationException, TransformerException, IOException{
+	public void createXml(String filePath, String task) throws ParserConfigurationException, TransformerException, IOException{
 		// DOMオブジェクト作成
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		DocumentBuilder db = dbf.newDocumentBuilder();
@@ -65,10 +69,23 @@ public class SpokenDocXML {
 		    	ScoreDoc sd = topDocs.scoreDocs[j];
 		    	int docId = sd.doc;
 //		    	float score = sd.score;
-		    	String docName = usedSearcher.doc(docId).get("id");
-		    	String rank = Integer.toString(j + 1);
 		        Element candidateElement = document.createElement("CANDIDATE");
-		        candidateElement.setAttribute("document", docName);
+
+		    	String docName = usedSearcher.doc(docId).get("id");
+		        // パッセージ検索では開始発話と終了発話の要素も必要
+		        // freqfileの"@documentID:from-to"パターンからid, from, toを抽出
+		    	if (task.equals("passage")) {
+		    	    Pattern pattern = Pattern.compile("(.+):(.+)-(.+)");
+		    	    Matcher result = pattern.matcher(docName);
+		    	    result.find();
+		            candidateElement.setAttribute("document", result.group(1));
+		            candidateElement.setAttribute("ipu-from", result.group(2));
+		            candidateElement.setAttribute("ipu-to", result.group(3));
+				}
+		    	else {
+		            candidateElement.setAttribute("document", docName);
+				}
+		    	String rank = Integer.toString(j + 1);
 		        candidateElement.setAttribute("rank", rank);
 		        queryElement.appendChild(candidateElement);
 			}

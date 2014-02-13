@@ -27,6 +27,7 @@ public class SpokendocBaseline {
 	public Analyzer analyzer;
 	// directoryのclose()は呼び出さなくても大丈夫なのか？
 	public Directory indexDirectory;
+	public String task;
 	public String freqfilePath;
 	public String tokenizerPath;
 	public String resultPath;
@@ -38,6 +39,7 @@ public class SpokendocBaseline {
 		FileInputStream fis = new FileInputStream(new File(propatiesPath));
 		conf.load(fis);
 		this.analyzer = new WhitespaceAnalyzer(Version.LUCENE_46);
+		this.task = conf.getProperty("task");
 		this.freqfilePath = conf.getProperty("freqfile");
 		this.tokenizerPath = conf.getProperty("tokenizer");
 		this.resultPath = conf.getProperty("result");

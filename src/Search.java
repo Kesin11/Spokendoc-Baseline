@@ -90,6 +90,6 @@ public class Search {
 			spokenDocXML.topDocArrayList.add(results);
 		}
 		// XML出力
-		spokenDocXML.createXml(spokendoc.resultPath);
+		spokenDocXML.createXml(spokendoc.resultPath, spokendoc.task);
 	}
 }
