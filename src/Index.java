@@ -54,6 +54,12 @@ public class Index {
 				indexString += repeatString;
 			}
 		}
+        // 末端処理
+        if (spokendoc.normalization) {
+                indexString = Util.normalizeString(indexString);
+        }
+        addDoc(writer, docId, indexString);
+
 		bReader.close();
 	    writer.close();
 
