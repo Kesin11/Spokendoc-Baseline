@@ -62,7 +62,5 @@ public class Index {
 
 		bReader.close();
 	    writer.close();
-
-	    System.out.println("Done indexing!");
 	}
 }

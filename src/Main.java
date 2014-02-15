@@ -45,6 +45,7 @@ public class Main {
 			// サブコマンド分岐
 		    if (ns.getString("subcommand").equals("index")) {
 		    	Index.indexing(ns.getString("properties"));
+	            System.out.println("Done indexing!");
 		    }
 		    else if (ns.getString("subcommand").equals("search")) {
 		    	Search.searching(ns.getString("properties"), ns.getString("query"));
