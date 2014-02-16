@@ -7,7 +7,17 @@ import org.apache.lucene.document.Field;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.IndexWriter;
 
-public class Index {
+/**
+ * 索引付けを行うクラス
+ */
+public class Indexer {
+	/**
+	 * 索引にドキュメントを追加する
+	 * @param writer 使用するIndexWriter
+	 * @param id ドキュメントID
+	 * @param content ドキュメントの本文
+	 * @throws IOException
+	 */
 	private static void addDoc(IndexWriter writer, String id, String content) throws IOException{
 		Document doc = new Document();
         doc.add(new Field("id", id, TextField.TYPE_STORED));
@@ -15,6 +25,11 @@ public class Index {
         writer.addDocument(doc);
 	}
 
+	/**
+	 * freqfileをパーズして索引を構築する
+	 * @param propertiesPath .propertiesへのパス
+	 * @throws IOException
+	 */
 	public static void indexing(String propertiesPath) throws IOException {
 		SpokendocBaseline spokendoc = new SpokendocBaseline(propertiesPath);
 

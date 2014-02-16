@@ -6,9 +6,16 @@ import java.util.ArrayList;
 
 /**
  * 形態素解析を行うシェルスクリプトを呼び出して文字列をトークンに分割する
- * http://www.ne.jp/asahi/hishidama/home/tech/java/process.html
  */
 public class Tokenizer {
+	/**
+	 * 形態素解析を行うシェルスクリプトを呼び出して文字列をトークンに分割する
+	 * @param rawString 元の文字列
+	 * @param tokenizerPath 形態素解析シェルスクリプトのパス
+	 * @return トークン文字列の配列
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
 	public static String[] tokenize(String rawString, String tokenizerPath) throws IOException, InterruptedException{
 		// サブコマンド実行
 		String command = "echo " + '"' + rawString + '"' + " | sh " + tokenizerPath;

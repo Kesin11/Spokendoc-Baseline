@@ -12,9 +12,19 @@ import net.sourceforge.argparse4j.inf.Namespace;
 import net.sourceforge.argparse4j.inf.Subparser;
 import net.sourceforge.argparse4j.inf.Subparsers;
 
-
+/**
+ * コマンドラインからの引数をパーズするクラス 
+ */
 public class Main {
-
+    /**
+     * コマンドラインからの引数をパーズして{@link Indexer}や{@link Search}を呼び出す
+     * @param args コマンドライン引数
+     * @throws IOException
+     * @throws ParseException
+     * @throws InterruptedException
+     * @throws ParserConfigurationException
+     * @throws TransformerException
+     */
 	public static void main(String[] args) throws IOException, ParseException, InterruptedException, ParserConfigurationException, TransformerException {
 		ArgumentParser parser = ArgumentParsers.newArgumentParser("SpokendocBaseline")
 		    .description("Baseline retrieval system for SpokenDoc");
@@ -40,11 +50,9 @@ public class Main {
 		    .help("Input query sentence OR queries file path");
 		try {
 			Namespace ns = parser.parseArgs(args);
-//			Namespace ns = parser.parseArgs(new String[]{"search", "lm.properties", "queries.txt"});
-//			Namespace ns = parser.parseArgs(new String[]{"index", "lm.properties"});
 			// サブコマンド分岐
 		    if (ns.getString("subcommand").equals("index")) {
-		    	Index.indexing(ns.getString("properties"));
+		    	Indexer.indexing(ns.getString("properties"));
 	            System.out.println("Done indexing!");
 		    }
 		    else if (ns.getString("subcommand").equals("search")) {

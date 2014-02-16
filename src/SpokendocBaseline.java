@@ -19,9 +19,11 @@ import org.apache.lucene.store.MMapDirectory;
 import org.apache.lucene.util.Version;
 
 /** 
- * 索引付けと検索で共通のAnalyzer, Directory, Similarityを管理するクラス
- * 索引付け、検索クラスはそれぞれIndexWriterとIndexSearcherをこのクラスのインスタンスから取得する 
- * そのうち設定ファイルを読み込むように修正したい
+ * 索引付けと検索で共通の様々な設定を管理するクラス.
+ * <p> 
+ * AnalyzerやSimilarityは色々と使うので一元管理しておく<br>
+ * {@link Indexer}、{@link Search}はそれぞれIndexWriterとIndexSearcherをこのクラスのインスタンスから取得する<br>
+ * propertiesから取得した各パラメータの値もこのクラスのインスタンスが管理する<br>
  */
 public class SpokendocBaseline {
 	public Analyzer analyzer;
@@ -34,6 +36,11 @@ public class SpokendocBaseline {
 	public Similarity similarity;
 	public Boolean normalization;
 	
+	/**
+	 *  
+	 * @param propatiesPath 設定ファイル.propertiesのパス
+	 * @throws IOException
+	 */
 	public SpokendocBaseline(String propatiesPath) throws IOException {
 		Properties conf = new Properties();
 		FileInputStream fis = new FileInputStream(new File(propatiesPath));
@@ -49,7 +56,7 @@ public class SpokendocBaseline {
 		//MMapDirectory: 読み込みはメモリ、書き出しはファイルシステムらしい
 		String indexPath = conf.getProperty("index");
 		this.indexDirectory = MMapDirectory.open(new File(indexPath));
-        // デフォルトの類似度は改良TFIDF.他にBM25, LanguageModelなどがある
+
 		String selectedSimilarity = conf.getProperty("similarity");
 		if (selectedSimilarity.equals("LMDirichlet")) {
 			float mu = Float.valueOf(conf.getProperty("mu"));
@@ -66,6 +73,11 @@ public class SpokendocBaseline {
 		fis.close();
 	}
 
+	/**
+	 * indexに書き込むためのIndexWriterを取得する 
+	 * @return analyzerとsimilarityがセット済みのIndexWriter 
+	 * @throws IOException
+	 */
 	public IndexWriter getIndexWriter() throws IOException{
 		IndexWriterConfig config = new IndexWriterConfig(Version.LUCENE_46, analyzer);
 		// Index側でも類似度を変更することに注意
@@ -74,6 +86,12 @@ public class SpokendocBaseline {
 
 		return writer;
 	}
+	/**
+	 * indexから検索を行うためのIndexSearcherを取得する 
+	 * 
+	 * @return indexDirectoryとsimilarityがセット済みのIndexSearcher 
+	 * @throws IOException
+	 */
 	public IndexSearcher getIndexSearcher() throws IOException {
 		// reader.close()を呼ばなくて大丈夫？
 	    DirectoryReader reader = DirectoryReader.open(this.indexDirectory);
@@ -83,6 +101,11 @@ public class SpokendocBaseline {
 
 		return searcher;
 	}
+	/**
+	 * 検索に使用するQueryParserを取得する 
+	 * @param field 検索に使用するindexのフィールド名
+	 * @return analyzerがセット済みのQueryParser 
+	 */
 	public QueryParser getQueryParser(String field) {
 	    QueryParser parser = new QueryParser(Version.LUCENE_46,field, this.analyzer);
 		return parser;

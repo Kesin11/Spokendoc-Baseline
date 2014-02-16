@@ -27,12 +27,24 @@ public class SpokenDocXML {
 	public ArrayList<TopDocs> topDocArrayList;
 	public ArrayList<String> queryArrayList;
 
+	/**
+	 * 
+	 * @param usedSearcher 検索に使用したSearcher
+	 */
     public SpokenDocXML(IndexSearcher usedSearcher){
     	this.usedSearcher = usedSearcher;
     	this.topDocArrayList = new ArrayList<TopDocs>();
     	this.queryArrayList = new ArrayList<String>();
     }
 
+    /**
+     * 検索結果からSpokenDocフォーマットのXMLを生成する
+     * @param filePath 出力するXMLのパス
+     * @param task SCRのタスク。lecture OR passage
+     * @throws ParserConfigurationException
+     * @throws TransformerException
+     * @throws IOException
+     */
 	public void createXml(String filePath, String task) throws ParserConfigurationException, TransformerException, IOException{
 		// DOMオブジェクト作成
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -66,6 +78,7 @@ public class SpokenDocXML {
 		    for (int j = 0; j < topDocs.scoreDocs.length; j++) {
 		    	ScoreDoc sd = topDocs.scoreDocs[j];
 		    	int docId = sd.doc;
+		    	// デバッグ用
 //		    	float score = sd.score;
 		        Element candidateElement = document.createElement("CANDIDATE");
 

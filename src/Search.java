@@ -19,6 +19,16 @@ import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 
 public class Search {
+	/**
+	 * 索引から実際に検索を担当するクラス 
+	 * @param propertiesPath .propertiesのパス
+	 * @param query 検索クエリ。文字列、又はクエリファイルへのパス
+	 * @throws IOException
+	 * @throws ParseException
+	 * @throws InterruptedException
+	 * @throws ParserConfigurationException
+	 * @throws TransformerException
+	 */
 	public static void searching(String propertiesPath, String query) throws IOException, ParseException, InterruptedException, ParserConfigurationException, TransformerException {
 		SpokendocBaseline spokendoc = new SpokendocBaseline(propertiesPath);
 
@@ -43,7 +53,15 @@ public class Search {
 		}
 	}
 
-	// クエリの文字列から検索
+	/**
+	 * クエリ文字列から1クエリの検索を行う
+	 * @param spokendoc {@link SpokendocBaseline}のインスタンス
+	 * @param queryString 検索クエリ文字列
+	 * @return 検索結果のTopDocsオブジェクト
+	 * @throws IOException
+	 * @throws InterruptedException
+	 * @throws ParseException
+	 */
 	private static TopDocs searchFromString(SpokendocBaseline spokendoc, String queryString)
 			throws IOException, InterruptedException, ParseException {
 		if (spokendoc.normalization) {
@@ -59,7 +77,12 @@ public class Search {
 	    return results;
 	}
 
-	// 検索結果を標準出力
+	/**
+	 * 検索結果からスコアを標準出力する
+	 * @param spokendoc {@link SpokendocBaseline}のインスタンス
+	 * @param results 検索結果のTopDocs
+	 * @throws IOException
+	 */
 	private static void printResult(SpokendocBaseline spokendoc, TopDocs results)
 			throws IOException {
 		for (ScoreDoc sd: results.scoreDocs){
@@ -69,6 +92,16 @@ public class Search {
 	    	System.out.println(doc.get("id") + ", score:" + Float.toString(score));
 	    }
 	}
+	/**
+	 * クエリファイルをパーズして複数クエリの連続検索を行う
+	 * @param spokendoc {@link SpokendocBaseline}のインスタンス
+	 * @param queryFile クエリファイルへのパス
+	 * @throws IOException
+	 * @throws InterruptedException
+	 * @throws ParseException
+	 * @throws ParserConfigurationException
+	 * @throws TransformerException
+	 */
 	private static void searchFromFile(SpokendocBaseline spokendoc, String queryFile) throws IOException, InterruptedException, ParseException, ParserConfigurationException, TransformerException{
 		SpokenDocXML spokenDocXML = new SpokenDocXML(spokendoc.getIndexSearcher());
 		BufferedReader br = new BufferedReader(new FileReader(queryFile));
