@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<ROOT>
+  <RUN>
+    <SUBTASK>SCR</SUBTASK>
+  </RUN>
+  <SYSTEM>
+    <SYSTEM-DESCRIPTION>Lucene baseline</SYSTEM-DESCRIPTION>
+  </SYSTEM>
+  <RESULTS>
+    <QUERY id="Sample-0001">
+      <CANDIDATE document="S01M0001" rank="1"/>
+      <CANDIDATE document="S02F0002" rank="2"/>
+    </QUERY>
+    <QUERY id="Sample-0002">
+      <CANDIDATE document="S02F0002" rank="1"/>
+      <CANDIDATE document="S01M0001" rank="2"/>
+    </QUERY>
+    <QUERY id="Sample-0003">
+      <CANDIDATE document="S03M0003" rank="1"/>
+    </QUERY>
+  </RESULTS>
+</ROOT>
