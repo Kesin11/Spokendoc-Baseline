@@ -4,6 +4,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -44,7 +46,6 @@ public class Search {
 	// クエリの文字列から検索
 	private static TopDocs searchFromString(SpokendocBaseline spokendoc, String queryString)
 			throws IOException, InterruptedException, ParseException {
-		System.out.println(queryString);
 		if (spokendoc.normalization) {
 			queryString = Util.normalizeString(queryString);
 		}
@@ -80,8 +81,12 @@ public class Search {
 				continue;
 			}
 			HashMap<String, String> idQuery = new HashMap<String, String>();
-			idQuery.put("id", line.split(" ")[0]);
-			idQuery.put("query", line.split(" ")[1]);
+			// クエリファイルのidとクエリを取得
+            Pattern pattern = Pattern.compile("(.+?) (.+)");
+            Matcher result = pattern.matcher(line);
+            result.find();
+			idQuery.put("id", result.group(1));
+			idQuery.put("query", result.group(2));
 			queries.add(idQuery);
 		}
 		br.close();
