@@ -34,6 +34,7 @@ public class Search {
 	            query = Util.normalizeString(query);
 			}
     		String tokenizedString = Util.joinWithSplitter(Tokenizer.tokenize(query, spokendoc.tokenizerPath), " ");
+    		tokenizedString = QueryParser.escape(tokenizedString);
     		System.out.println(tokenizedString);
             TopDocs results = searchFromString(spokendoc, query);
 	        printResult(spokendoc, results);
@@ -43,11 +44,12 @@ public class Search {
 	// クエリの文字列から検索
 	private static TopDocs searchFromString(SpokendocBaseline spokendoc, String queryString)
 			throws IOException, InterruptedException, ParseException {
+		System.out.println(queryString);
 		if (spokendoc.normalization) {
 			queryString = Util.normalizeString(queryString);
 		}
 		String tokenizedString = Util.joinWithSplitter(Tokenizer.tokenize(queryString, spokendoc.tokenizerPath), " ");
-		tokenizedString = tokenizedString.replaceAll("([¥+¥-¥&¥|¥!¥(¥)¥{¥}¥[¥]¥^¥~¥*¥?¥:¥¥])", "¥"+"$1");
+		tokenizedString = QueryParser.escape(tokenizedString);
 
 		QueryParser parser = spokendoc.getQueryParser("content");
 	    Query query = parser.parse(tokenizedString);
