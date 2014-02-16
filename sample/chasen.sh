@@ -14,6 +14,9 @@
 ## -e コマンドライン中の文字列をスクリプトとして認識させる
 
 CHASEN=`which chasen`
+# Eclipseで実行するときは`which mecab`でパスを取得できないので、フルパスを書く必要がある
+# CHASEN=/opt/local/bin/chasen
+
 RC_PATH=/opt/local/lib/chasen/dic/unidic/chasenrc
 $CHASEN -r $RC_PATH -iw -F "%m\\t%y\\t%M\\t%U(%P-)\\t%T \\t%F \\n" | grep "名詞" | perl -nle 's/\t.*// and print'
 

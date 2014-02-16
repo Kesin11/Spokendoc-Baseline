@@ -11,6 +11,9 @@
 # javaのシェルはmecabのパスを知らないので、フルパスを指定する必要がある
 
 MECAB=`which mecab`
+# Eclipseで実行するときは`which mecab`でパスを取得できないので、フルパスを書く必要がある
+# MECAB=/usr/local/bin/mecab
+
 $MECAB | grep "名詞" | perl -nle 's/\t.*// and print'
 
 #実行例
